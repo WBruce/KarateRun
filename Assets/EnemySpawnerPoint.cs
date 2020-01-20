@@ -5,17 +5,25 @@ using UnityEngine;
 
 public class EnemySpawnerPoint : MonoBehaviour {
 
+    public static EnemySpawnerPoint Instance;
+
     //Spawn this object
     public GameObject spawnObject;
 
     public float maxTime = 5;
     public float minTime = 2;
 
+    public float currentSpeed = 0.02f;
+
     //current time
     private float time;
 
     //The time to spawn the object
     private float spawnTime;
+
+    void Awake() {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -35,14 +43,25 @@ public class EnemySpawnerPoint : MonoBehaviour {
             SpawnObject();
             SetRandomTime();
         }
+        if (UIManager.Instance.GlobalScore == 10)
+        {
+            DifficultyUp();
+        }
 
     }
+
+    void DifficultyUp()
+        {
+            currentSpeed += 0.005f;
+            Debug.Log(currentSpeed);
+        }
 
     //Spawns the object and resets the time
     void SpawnObject()
     {
         time = 0;
-        Instantiate(spawnObject, transform.position, spawnObject.transform.rotation);
+        GameObject tmp = Instantiate(spawnObject, transform.position, spawnObject.transform.rotation);
+        tmp.GetComponent<EnemyControl>().DefineSpeed(currentSpeed);
     }
 
     //Sets the random time between minTime and maxTime

@@ -5,40 +5,39 @@ using UnityEngine;
 public class EnemyControl : MonoBehaviour {
 
     public float enemySpeed;
-    float globalScore = ScoreManager.GlobalScore;
+
     bool RankUpOnce = false;
 
 	// Use this for initialization
 	void Start () {
-        enemySpeed = 0.02f;
+        transform.Translate(enemySpeed, 0, 0);
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 tmp = transform.position + Vector3.left * enemySpeed;
-                transform.position = tmp;
-        if (ScoreManager.GlobalScore == 10 && RankUpOnce == false)
-        {
-            RankUpOnce = true;
-            DifficultyUp();
+            RunningAround();
+            Debug.Log(enemySpeed);
+        
         }
-
-        Debug.Log(enemySpeed);
-    }
-
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Attack")
         {
             Destroy(gameObject);
-            ScoreManager.GlobalScore++;
+            UIManager.Instance.UpdateScore(1);
         }
     }
+    public void DefineSpeed(float speed){
 
-    void DifficultyUp()
-    {
-            enemySpeed = enemySpeed + 0.005f;
+        enemySpeed = speed;
     }
+
+    void RunningAround()
+    {
+        transform.Translate(enemySpeed, 0, 0);
+
+    }
+
     }
