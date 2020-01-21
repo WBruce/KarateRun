@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Timers;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemySpawnerPoint : MonoBehaviour {
 
@@ -12,8 +13,10 @@ public class EnemySpawnerPoint : MonoBehaviour {
 
     public float maxTime = 5;
     public float minTime = 2;
-
     public float currentSpeed = 0.02f;
+
+
+    public Color currentColor = Color.red;
 
     //current time
     private float time;
@@ -53,7 +56,19 @@ public class EnemySpawnerPoint : MonoBehaviour {
     void DifficultyUp()
         {
             currentSpeed += 0.005f;
-            Debug.Log(currentSpeed);
+            currentColor = Color.yellow;
+            foreach (GameObject go in GameObject.FindObjectsOfType(typeof(GameObject)))
+            {
+                if(go.tag == "Enemy"){
+                    go.GetComponent<EnemyControl>().DefineSpeed(currentSpeed);
+                    Debug.Log("I am here in DifficultyUp");
+                    Debug.Log(currentSpeed); 
+                    go.GetComponent<Renderer>().material.SetColor("_Color", currentColor);  
+
+                    //Destroy(go);
+                }
+
+            }
         }
 
     //Spawns the object and resets the time
@@ -62,6 +77,7 @@ public class EnemySpawnerPoint : MonoBehaviour {
         time = 0;
         GameObject tmp = Instantiate(spawnObject, transform.position, spawnObject.transform.rotation);
         tmp.GetComponent<EnemyControl>().DefineSpeed(currentSpeed);
+        tmp.GetComponent<Renderer>().material.SetColor("_Color", currentColor);   
     }
 
     //Sets the random time between minTime and maxTime
